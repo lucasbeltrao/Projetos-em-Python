@@ -1,0 +1,71 @@
+import os
+import pandas as pd
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+# Caminho para o arquivo .dat no diretório de rede
+caminho_arquivo_dat = 'C:\\LMS teste'
+
+
+# Especifique a codificação correta para o seu arquivo .dat
+codificacao_correta = 'ISO-8859-1'
+
+# Leia o arquivo .dat com a codificação especificada
+df = pd.read_csv(caminho_arquivo_dat, sep='\t', encoding=codificacao_correta)
+
+# Agora você pode trabalhar com o DataFrame df
+print(df.head())
+
+# Diretório de rede onde estão os arquivos .dat
+diretorio_rede = 'C:\\LMS teste'
+
+# Função para converter um arquivo .dat em PDF
+def dat_to_pdf(input_dat_path, output_pdf_path):
+    # Ler os dados .dat usando Pandas (ajuste o separador se necessário)
+    df = pd.read_csv(input_dat_path, sep='\t')
+
+    # Gerar um PDF usando ReportLab
+    c = canvas.Canvas(output_pdf_path, pagesize=letter)
+    c.drawString(100, 700, 'Dados do arquivo .dat:')
+    
+    # Adicione os dados do DataFrame ao PDF
+    for i, row in df.iterrows():
+        y_position = 700 - (i * 12)  # Ajuste a posição vertical conforme necessário
+        c.drawString(100, y_position, f'Coluna 1: {row["Coluna1"]}')
+        c.drawString(300, y_position, f'Coluna 2: {row["Coluna2"]}')
+        # Adicione mais colunas conforme necessário
+
+    c.showPage()
+    c.save()
+
+# Percorra os arquivos .dat no diretório de rede e converta-os em PDF
+for filename in os.listdir(caminho_arquivo_dat):
+    if filename.endswith(".dat"):
+        input_path = os.path.join(caminho_arquivo_dat, filename)
+        output_path = os.path.splitext(input_path)[0] + ".pdf"
+        dat_to_pdf(input_path, output_path)
+
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+# Caminho para o diretório de rede onde você deseja salvar o PDF
+diretorio_rede = 'C:\\LMS teste'
+
+# Nome do arquivo PDF que você deseja criar
+nome_arquivo = 'dados.pdf'
+
+# Caminho completo para o arquivo PDF na rede
+caminho_completo = os.path.join(diretorio_rede, nome_arquivo)
+
+# Criar o PDF usando ReportLab
+def criar_pdf(nome_arquivo):
+    c = canvas.Canvas(nome_arquivo, pagesize=letter)
+    c.drawString(100, 700, 'Exemplo de PDF em um diretório de rede.')
+    c.showPage()
+    c.save()
+
+# Chame a função para criar o PDF no diretório de rede
+criar_pdf(caminho_completo)
+
+print(f'PDF criado em: {caminho_completo}')
